@@ -1,0 +1,20 @@
+# build output
+target/
+
+# runtime upload data (attachments)
+upload-files/
+
+# app logs
+app.log
+*.log
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# OS
+.DS_Store

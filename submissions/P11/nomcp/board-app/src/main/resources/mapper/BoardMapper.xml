@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.egovframe.sample.board.mapper.BoardMapper">
+
+    <resultMap id="boardResult" type="org.egovframe.sample.board.model.Board">
+        <id     property="boardId" column="BOARD_ID"/>
+        <result property="title"   column="TITLE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="writer"  column="WRITER"/>
+        <result property="hit"     column="HIT"/>
+        <result property="regDt"   column="REG_DT"/>
+    </resultMap>
+
+    <!-- 검색 조건 조각 (searchWrd 가 있을 때만 적용) -->
+    <sql id="searchWhere">
+        <if test="searchWrd != null and searchWrd != ''">
+            <choose>
+                <when test="searchTp == 'TITLE'">
+                    AND UPPER(TITLE) LIKE '%' || UPPER(#{searchWrd}) || '%'
+                </when>
+                <when test="searchTp == 'CONTENT'">
+                    AND UPPER(CONTENT) LIKE '%' || UPPER(#{searchWrd}) || '%'
+                </when>
+                <when test="searchTp == 'WRITER'">
+                    AND UPPER(WRITER) LIKE '%' || UPPER(#{searchWrd}) || '%'
+                </when>
+                <otherwise>
+                    AND UPPER(TITLE) LIKE '%' || UPPER(#{searchWrd}) || '%'
+                </otherwise>
+            </choose>
+        </if>
+    </sql>
+
+    <!-- 목록 (검색 + 페이징) : HSQL OFFSET..ROWS FETCH NEXT..ROWS ONLY -->
+    <select id="selectBoardList" parameterType="org.egovframe.sample.board.model.BoardSearch"
+            resultMap="boardResult">
+        SELECT BOARD_ID, TITLE, WRITER, HIT, REG_DT
+        FROM BOARD
+        WHERE 1 = 1
+        <include refid="searchWhere"/>
+        ORDER BY CAST(BOARD_ID AS BIGINT) DESC
+        OFFSET #{firstRecordIndex} ROWS FETCH NEXT #{recordCountPerPage} ROWS ONLY
+    </select>
+
+    <!-- 검색 조건 총 건수 -->
+    <select id="countBoardList" parameterType="org.egovframe.sample.board.model.BoardSearch"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD
+        WHERE 1 = 1
+        <include refid="searchWhere"/>
+    </select>
+
+    <!-- 단건 조회 -->
+    <select id="selectBoard" resultMap="boardResult">
+        SELECT BOARD_ID, TITLE, CONTENT, WRITER, HIT, REG_DT
+        FROM BOARD
+        WHERE BOARD_ID = #{boardId}
+    </select>
+
+    <!-- 등록 : SEQ_BOARD 로 ID 자동 발급 -->
+    <insert id="insertBoard" parameterType="org.egovframe.sample.board.model.Board">
+        <selectKey keyProperty="boardId" resultType="string" order="BEFORE">
+            SELECT CAST(NEXT VALUE FOR SEQ_BOARD AS VARCHAR(20)) FROM (VALUES(0))
+        </selectKey>
+        INSERT INTO BOARD (BOARD_ID, TITLE, CONTENT, WRITER, HIT, REG_DT)
+        VALUES (#{boardId}, #{title}, #{content}, #{writer}, 0, CURRENT_TIMESTAMP)
+    </insert>
+
+    <!-- 수정 -->
+    <update id="updateBoard" parameterType="org.egovframe.sample.board.model.Board">
+        UPDATE BOARD
+        SET TITLE   = #{title},
+            CONTENT = #{content}
+        WHERE BOARD_ID = #{boardId}
+    </update>
+
+    <!-- 삭제 -->
+    <delete id="deleteBoard">
+        DELETE FROM BOARD
+        WHERE BOARD_ID = #{boardId}
+    </delete>
+
+    <!-- 조회수 증가 -->
+    <update id="updateHit">
+        UPDATE BOARD
+        SET HIT = HIT + 1
+        WHERE BOARD_ID = #{boardId}
+    </update>
+
+</mapper>

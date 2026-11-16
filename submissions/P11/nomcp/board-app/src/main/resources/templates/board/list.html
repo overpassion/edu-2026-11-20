@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>eGovFrame 게시판</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="wrap">
+    <h1>📋 eGovFrame 5.0 게시판</h1>
+
+    <!-- 검색 -->
+    <form class="search" th:action="@{/board/list}" method="get">
+        <select name="searchTp">
+            <option value="TITLE"   th:selected="${search.searchTp == 'TITLE'}">제목</option>
+            <option value="CONTENT" th:selected="${search.searchTp == 'CONTENT'}">내용</option>
+            <option value="WRITER"  th:selected="${search.searchTp == 'WRITER'}">작성자</option>
+        </select>
+        <input type="text" name="searchWrd" th:value="${search.searchWrd}" placeholder="검색어">
+        <button type="submit">검색</button>
+    </form>
+
+    <!-- 목록 -->
+    <table class="board-table">
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th class="title-col">제목</th>
+            <th>작성자</th>
+            <th>조회수</th>
+            <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(boardList)}">
+            <td colspan="5" class="empty">등록된 게시글이 없습니다.</td>
+        </tr>
+        <tr th:each="b : ${boardList}">
+            <td th:text="${b.boardId}"></td>
+            <td class="title-col">
+                <a th:href="@{/board/detail/{id}(id=${b.boardId})}" th:text="${b.title}"></a>
+            </td>
+            <td th:text="${b.writer}"></td>
+            <td th:text="${b.hit}"></td>
+            <td th:text="${#temporals.format(b.regDt, 'yyyy-MM-dd')}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 페이징 (eGovFrame PaginationInfo) -->
+    <div class="paging" th:with="pi=${paginationInfo}" th:if="${paginationInfo.totalPageCount > 1}">
+        <a th:if="${pi.firstPageNo > 1}"
+           th:href="@{/board/list(page=1, searchTp=${search.searchTp}, searchWrd=${search.searchWrd})}">«</a>
+        <a th:if="${pi.currentPageNo > 1}"
+           th:href="@{/board/list(page=${pi.currentPageNo - 1}, searchTp=${search.searchTp}, searchWrd=${search.searchWrd})}">‹</a>
+
+        <span th:each="p : ${#numbers.sequence(pi.firstPageNoOnPageList, pi.lastPageNoOnPageList)}">
+            <span th:if="${p == pi.currentPageNo}" class="cur" th:text="${p}"></span>
+            <a th:unless="${p == pi.currentPageNo}"
+               th:href="@{/board/list(page=${p}, searchTp=${search.searchTp}, searchWrd=${search.searchWrd})}"
+               th:text="${p}"></a>
+        </span>
+
+        <a th:if="${pi.currentPageNo < pi.totalPageCount}"
+           th:href="@{/board/list(page=${pi.currentPageNo + 1}, searchTp=${search.searchTp}, searchWrd=${search.searchWrd})}">›</a>
+        <a th:if="${pi.lastPageNo < pi.totalPageCount}"
+           th:href="@{/board/list(page=${pi.totalPageCount}, searchTp=${search.searchTp}, searchWrd=${search.searchWrd})}">»</a>
+    </div>
+
+    <div class="toolbar">
+        <a class="btn" th:href="@{/board/createForm}">글쓰기</a>
+    </div>
+
+    <p class="footer">HSQLDB(내장) · Java 17 · Maven · eGovFrame 5.0 · MyBatis</p>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 상세</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="wrap">
+    <h1>📄 게시글 상세</h1>
+
+    <table class="detail-table">
+        <tr>
+            <th>번호</th>
+            <td th:text="${board.boardId}"></td>
+        </tr>
+        <tr>
+            <th>제목</th>
+            <td th:text="${board.title}"></td>
+        </tr>
+        <tr>
+            <th>작성자</th>
+            <td th:text="${board.writer}"></td>
+        </tr>
+        <tr>
+            <th>조회수</th>
+            <td th:text="${board.hit}"></td>
+        </tr>
+        <tr>
+            <th>작성일</th>
+            <td th:text="${#temporals.format(board.regDt, 'yyyy-MM-dd HH:mm')}"></td>
+        </tr>
+        <tr>
+            <th>내용</th>
+            <td class="content" th:text="${board.content}"></td>
+        </tr>
+    </table>
+
+    <!-- 첨부파일 -->
+    <div class="attach" th:if="${!#lists.isEmpty(board.fileList)}">
+        <h3>📎 첨부파일</h3>
+        <ul>
+            <li th:each="f : ${board.fileList}">
+                <a th:href="@{/board/file/{id}(id=${f.fileId})}" th:text="${f.fileNm}"></a>
+                <span class="size" th:text="|(${#numbers.formatInteger(f.fileSize, 1, 'COMMA')} bytes)|"></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="toolbar">
+        <a class="btn" th:href="@{/board/editForm/{id}(id=${board.boardId})}">수정</a>
+        <form th:action="@{/board/delete/{id}(id=${board.boardId})}" method="post"
+              onsubmit="return confirm('이 게시글과 첨부파일을 모두 삭제할까요?');" style="display:inline">
+            <button type="submit" class="btn danger">삭제</button>
+        </form>
+        <a class="btn" th:href="@{/board/list}">목록</a>
+    </div>
+</div>
+</body>
+</html>

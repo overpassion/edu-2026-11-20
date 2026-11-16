@@ -1,0 +1,67 @@
+* { box-sizing: border-box; }
+body {
+    font-family: -apple-system, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    background: #f5f6f8;
+    color: #222;
+    margin: 0;
+    padding: 24px;
+}
+.wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 28px 32px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+}
+h1 { font-size: 22px; margin: 0 0 20px; }
+h3 { font-size: 15px; margin: 20px 0 8px; }
+
+.search { display: flex; gap: 8px; margin-bottom: 16px; }
+.search select, .search input {
+    padding: 8px 10px; border: 1px solid #ccd; border-radius: 6px;
+}
+.search input { flex: 1; }
+.search button, .btn {
+    padding: 8px 16px; border: none; border-radius: 6px;
+    background: #2f6fed; color: #fff; cursor: pointer; text-decoration: none;
+    font-size: 14px;
+}
+.btn:hover, .search button:hover { background: #1b55c8; }
+.btn.danger { background: #e04444; }
+.btn.danger:hover { background: #b83030; }
+
+table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+th, td { padding: 10px 12px; border-bottom: 1px solid #eee; text-align: center; }
+thead th { background: #fafbfc; border-top: 2px solid #2f6fed; }
+.title-col { text-align: left; }
+.title-col a { color: #222; text-decoration: none; }
+.title-col a:hover { color: #2f6fed; }
+.empty { color: #888; padding: 28px; }
+
+.detail-table th { width: 120px; background: #fafbfc; }
+.detail-table td { text-align: left; }
+.detail-table .content { min-height: 120px; white-space: pre-wrap; }
+
+.attach ul { list-style: none; padding: 0; margin: 0; }
+.attach li { padding: 4px 0; font-size: 14px; }
+.attach .size { color: #888; font-size: 12px; }
+.attach em { color: #b58900; font-style: normal; font-size: 12px; }
+.attach a { color: #2f6fed; }
+
+.paging { display: flex; justify-content: center; gap: 6px; margin: 18px 0; }
+.paging a, .paging .cur {
+    padding: 6px 11px; border-radius: 6px; text-decoration: none; color: #444;
+}
+.paging a:hover { background: #e9f0ff; color: #2f6fed; }
+.paging .cur { background: #2f6fed; color: #fff; }
+
+.toolbar { display: flex; gap: 10px; margin-top: 18px; }
+
+.board-form .field { margin-bottom: 14px; display: flex; flex-direction: column; }
+.board-form label { font-weight: 600; margin-bottom: 5px; }
+.board-form input, .board-form textarea {
+    padding: 9px 10px; border: 1px solid #ccd; border-radius: 6px; font-size: 14px;
+}
+.board-form .err { color: #e04444; font-size: 12px; margin-top: 4px; }
+.footer { color: #999; font-size: 12px; text-align: center; margin-top: 24px; }

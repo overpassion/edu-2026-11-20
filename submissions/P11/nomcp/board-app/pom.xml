@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.egovframe.boot</groupId>
+        <artifactId>egovframe-boot-starter-parent</artifactId>
+        <version>5.0.0</version>
+    </parent>
+
+    <groupId>org.egovframe.sample</groupId>
+    <artifactId>board-app</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+    <name>board-app</name>
+    <description>eGovFrame 5.0 Boot 게시판 (HSQLDB + 첨부파일)</description>
+
+    <properties>
+        <java.version>17</java.version>
+        <mybatis-boot-starter.version>3.0.4</mybatis-boot-starter.version>
+    </properties>
+
+    <!--
+      eGovFrame RTE / Boot 아티팩트는 Maven Central 이 아닌 eGovFrame 저장소에 있다.
+      ~/.m2 에 이미 캐시된 본을 인식시키기 위해 저장소 id 를 'egovframe'(그리고 이력상
+      'egovframe2')로 맞춘다. 캐시본이 있으면 원격 접속 없이 로컬 아티팩트를 사용한다.
+    -->
+    <repositories>
+        <repository>
+            <id>egovframe</id>
+            <url>https://maven.egovframe.go.kr/maven/</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+        <repository>
+            <id>egovframe2</id>
+            <url>https://maven.egovframe.go.kr/maven/</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>egovframe</id>
+            <url>https://maven.egovframe.go.kr/maven/</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencies>
+        <!-- Spring Boot Web (MVC + Tomcat + Jackson) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- Thymeleaf view -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <!-- Bean Validation -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- eGovFrame RTE -->
+        <dependency>
+            <groupId>org.egovframe.rte</groupId>
+            <artifactId>egovframe-rte-fdl-cmmn</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.egovframe.rte</groupId>
+            <artifactId>egovframe-rte-ptl-mvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.egovframe.rte</groupId>
+            <artifactId>egovframe-rte-psl-dataaccess</artifactId>
+        </dependency>
+
+        <!-- MyBatis Spring Boot Starter (auto-config SqlSessionFactory) -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${mybatis-boot-starter.version}</version>
+        </dependency>
+
+        <!-- Embedded HSQLDB -->
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Lombok (optional) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>board-app</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

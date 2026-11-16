@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 작성</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="wrap">
+    <h1 th:text="${#strings.isEmpty(board.boardId)} ? '✍️ 새 글 작성' : '📝 글 수정'">게시글 작성</h1>
+
+    <form th:object="${board}"
+          th:action="${#strings.isEmpty(board.boardId)} ? @{/board/create} : @{/board/update}"
+          method="post" enctype="multipart/form-data" class="board-form">
+
+        <input type="hidden" name="boardId" th:value="${board.boardId}">
+
+        <div class="field">
+            <label for="writer">작성자</label>
+            <input type="text" id="writer" name="writer" th:value="${board.writer}" maxlength="50">
+            <span class="err" th:if="${#fields.hasErrors('writer')}" th:errors="*{writer}"></span>
+        </div>
+
+        <div class="field">
+            <label for="title">제목</label>
+            <input type="text" id="title" name="title" th:value="${board.title}" maxlength="200">
+            <span class="err" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+        </div>
+
+        <div class="field">
+            <label for="content">내용</label>
+            <textarea id="content" name="content" rows="10" maxlength="4000" th:text="${board.content}"></textarea>
+            <span class="err" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></span>
+        </div>
+
+        <!-- 기존 첨부 (수정 모드) -->
+        <div class="attach" th:if="${!#strings.isEmpty(board.boardId) and !#lists.isEmpty(board.fileList)}">
+            <h3>📎 기존 첨부파일</h3>
+            <ul>
+                <li th:each="f : ${board.fileList}">
+                    <label>
+                        <input type="checkbox" name="deletedFileIds" th:value="${f.fileId}">
+                        <span th:text="${f.fileNm}"></span>
+                        <span class="size"
+                              th:text="|(${#numbers.formatInteger(f.fileSize, 1, 'COMMA')} bytes)|"></span>
+                        <a th:href="@{/board/file/{id}(id=${f.fileId})}">(다운로드)</a>
+                        <em>선택하면 수정 저장 시 삭제됩니다.</em>
+                    </label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 새 첨부 업로드 -->
+        <div class="field">
+            <label for="files">첨부파일 (여러 개 선택 가능)</label>
+            <input type="file" id="files" name="files" multiple>
+        </div>
+
+        <div class="toolbar">
+            <button type="submit" class="btn">저장</button>
+            <a class="btn" th:href="@{/board/list}">취소</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
